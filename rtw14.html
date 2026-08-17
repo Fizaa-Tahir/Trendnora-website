@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTW Product Detail</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+/* HEADER */
+.main-header{position:fixed;top:0;width:100%;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid #eee;z-index:9999;}
+.header-left{display:flex;align-items:center;gap:10px;}
+.menu-icon{font-size:22px;cursor:pointer;}
+.logo{font-size:42px;font-weight:bold;}
+.header-right i{font-size:22px;margin-left:14px;cursor:pointer;}
+.cart{position:relative;}
+.cart span{position:absolute;top:-6px;right:-8px;background:#000;color:#fff;border-radius:50%;font-size:10px;padding:2px 5px;}
+
+/* PRODUCT PAGE */
+.container{display:flex;padding:100px 16px 30px;gap:30px;flex-wrap:wrap;align-items:flex-start;}
+.product-images{flex:1;min-width:400px;display:flex;flex-direction:column;align-items:center;}
+#main-img{width:65%;max-height:calc(100vh - 160px);object-fit:contain;border:1px solid #ccc;}
+#thumbnails{display:flex;gap:8px;margin-top:10px;justify-content:center;}
+#thumbnails img{width:60px;height:75px;object-fit:cover;cursor:pointer;border:1px solid #ccc;}
+.product-info{flex:1;min-width:300px;}
+.product-info h1{font-size:24px;margin-bottom:8px;}
+.price{font-size:22px;margin:10px 0;font-weight:600;}
+.sku{font-size:13px;color:#666;margin-bottom:10px;}
+.sizes button{margin:5px 5px 5px 0;padding:6px 12px;border:1px solid #333;background:none;cursor:pointer;}
+.sizes button.selected{background:#333;color:#fff;}
+.quantity{margin:15px 0;display:flex;align-items:center;gap:10px;}
+.quantity button{padding:4px 10px;}
+.add-to-cart{padding:12px 20px;background:#000;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-bottom:20px;}
+.add-to-cart.bounce{animation:bounce 0.3s;}
+@keyframes bounce{0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+.tabs{margin-top:25px;}
+.tabs button{padding:8px 14px;border:1px solid #ccc;background:none;cursor:pointer;margin-right:5px;font-size:14px;}
+.tab-content{margin-top:15px;font-size:14px;line-height:1.5;}
+
+/* CART SIDEBAR */
+.cart-sidebar{position:fixed;top:0;right:-420px;width:420px;height:100%;background:#fff;box-shadow:-8px 0 25px rgba(0,0,0,0.15);transition:right 0.35s ease;z-index:10000;}
+.cart-sidebar.active{right:0;}
+.cart-header{position:sticky;top:0;background:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;}
+.cart-header h3{font-size:18px;}
+.close-cart{font-size:26px;cursor:pointer;}
+.free-shipping{padding:16px 20px;font-size:13px;background:#fafafa;border-bottom:1px solid #eee;}
+.progress-bar{height:6px;background:#ddd;border-radius:10px;margin-top:8px;}
+.progress-fill{height:100%;background:#000;border-radius:10px;}
+.cart-items{padding:10px 20px;}
+.cart-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #eee;}
+.cart-item img{width:90px;height:110px;object-fit:cover;border-radius:4px;}
+.cart-item-info p{font-size:13px;margin:4px 0;}
+.cart-item-info p:first-child{font-weight:600;}
+.quantity-selector{display:flex;gap:8px;margin-top:6px;}
+.quantity-selector button{width:28px;height:28px;border:1px solid #000;background:none;cursor:pointer;}
+.item-actions i{font-size:18px;color:#777;cursor:pointer;transition:0.2s;}
+.item-actions i:hover{color:#d10000;transform:scale(1.3);}
+.cart-subtotal{padding:18px 20px;display:flex;justify-content:space-between;font-weight:600;border-top:1px solid #eee;}
+.cart-buttons{padding:20px;display:flex;flex-direction:column;gap:12px;}
+.cart-buttons button{padding:14px;font-weight:600;cursor:pointer;}
+#checkoutBtn{background:#000;color:#fff;}
+#continueShoppingBtn{background:#fff;border:1px solid #000;}
+#undoToast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:12px 18px;font-size:13px;display:none;gap:12px;z-index:99999;}
+#undoToast span{cursor:pointer;text-decoration:underline;font-weight:bold;}
+@media(max-width:768px){.container{flex-direction:column;}#main-img{max-height:65vh;}.product-images,.product-info{width:100%;}}
+</style>
+</head>
+
+<body>
+
+<header class="main-header">
+  <div class="header-left">
+    <i class="fa-solid fa-bars menu-icon"></i>
+    <span class="logo">Trendora</span>
+  </div>
+  <div class="header-right">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    
+    <i class="fa-solid fa-bag-shopping cart"><span id="cartCount">0</span></i>
+  </div>
+</header>
+
+<div class="container">
+  <div class="product-images">
+    <img id="main-img">
+    <div id="thumbnails"></div>
+  </div>
+
+  <div class="product-info">
+    <h1 id="product-title"></h1>
+    <div class="price" id="product-price"></div>
+    <div class="sku" id="product-sku"></div>
+    <div class="sizes" id="size-buttons"></div>
+
+    <div class="quantity">
+      <button onclick="changeQty(-1)">-</button>
+      <span id="qty">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <button class="add-to-cart">ADD TO BAG</button>
+
+    <div class="tabs">
+      <button onclick="showTab('details')">DETAILS</button>
+      <button onclick="showTab('description')">DESCRIPTION</button>
+      <button onclick="showTab('size-guide')">SIZE GUIDE</button>
+    </div>
+
+    <div class="tab-content">
+      <div id="details"></div>
+      <div id="description" style="display:none;"></div>
+      <div id="size-guide" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>SHOPPING CART</h3>
+    <span class="close-cart" id="closeCartBtn">&times;</span>
+  </div>
+  <div class="free-shipping">
+    <p>FREE SHIPPING OVER Rs.8,000</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-subtotal">
+    <span>SUBTOTAL</span>
+    <span id="cartSubtotal">Rs.0</span>
+  </div>
+  <div class="cart-buttons">
+    <button id="checkoutBtn">CHECKOUT</button>
+    <button id="continueShoppingBtn">CONTINUE SHOPPING</button>
+  </div>
+</div>
+
+<div id="undoToast">Item removed <span onclick="undoRemove()">UNDO</span></div>
+
+<script>
+// Product data
+const product={
+  title:"Pastel Shades Shirt 2pc",
+  price:3900,
+  sku:"03PBEW25V613_999",
+  images:["pret14.webp","pret14(2).webp","pret14(3).webp"],
+  sizes:["XS","S","M","L","XL"],
+  details:"Straight Shirt<br>Slim Fit<br>Embroidered Front Panel",
+  description:"Premium quality khaddar suit.",
+  sizeGuide:"Check size chart for accurate fit."
+};
+
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let lastRemovedItem = null;
+let lastRemovedIndex = null;
+
+// Update header cart count
+function updateCartCount(){
+  document.getElementById("cartCount").innerText = cart.reduce((acc,i)=>acc+i.qty,0);
+}
+
+// Initialize product page
+document.getElementById("product-title").innerText = product.title;
+document.getElementById("product-price").innerText = "Rs. "+product.price;
+document.getElementById("product-sku").innerText = "SKU: "+product.sku;
+document.getElementById("main-img").src = product.images[0];
+product.images.forEach(img=>{
+  const i=document.createElement("img"); i.src=img; i.onclick=()=>document.getElementById("main-img").src=img;
+  document.getElementById("thumbnails").appendChild(i);
+});
+product.sizes.forEach(s=>{
+  const b=document.createElement("button"); b.innerText=s; b.onclick=()=>selectSize(b);
+  document.getElementById("size-buttons").appendChild(b);
+});
+document.getElementById("details").innerHTML = product.details;
+document.getElementById("description").innerHTML = product.description;
+document.getElementById("size-guide").innerHTML = product.sizeGuide;
+
+let qty = 1;
+function changeQty(v){ qty = Math.max(1, qty+v); document.getElementById("qty").innerText = qty; }
+function selectSize(btn){document.querySelectorAll(".sizes button").forEach(b=>b.classList.remove("selected")); btn.classList.add("selected"); }
+function showTab(id){ ["details","description","size-guide"].forEach(t=>document.getElementById(t).style.display="none"); document.getElementById(id).style.display="block"; }
+
+// CART FUNCTIONS
+// CART ICON
+const cartIcon = document.querySelector(".fa-bag-shopping"); // your header cart icon
+
+cartIcon.addEventListener("click", () => {
+  cartSidebar.classList.add("active");
+});
+
+// ADD TO CART
+document.querySelector(".add-to-cart").onclick = () => {
+  const s = document.querySelector(".sizes .selected");
+  if (!s) { alert("Select size first"); return; }
+
+  addToCart({
+    name: product.title + " (" + s.innerText + ")",
+    price: product.price,
+    image: product.images[0],
+    qty
+  });
+};
+
+// ADD TO CART FUNCTION
+function addToCart(p) {
+  const e = cart.find(i => i.name === p.name);
+  if (e) e.qty += p.qty;
+  else cart.push(p);
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+  updateCartCount();
+
+  // Open the sidebar when item added
+  cartSidebar.classList.add("active");
+
+  // Button animation
+  const btn = document.querySelector(".add-to-cart");
+  btn.innerText = "✔ Added!"; 
+  btn.style.background = "green"; 
+  btn.classList.add("bounce");
+  setTimeout(() => {
+    btn.innerText = "ADD TO BAG"; 
+    btn.style.background = "#000"; 
+    btn.classList.remove("bounce");
+  }, 1500);
+}
+
+const cartSidebar = document.getElementById("cartSidebar");
+const cartItemsEl = document.getElementById("cartItems");
+
+function addToCart(p){
+  cartSidebar.classList.add("active");
+  const e = cart.find(i=>i.name===p.name);
+  if(e) e.qty += p.qty;
+  else cart.push(p);
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+  updateCartCount();
+
+  const btn = document.querySelector(".add-to-cart");
+  btn.innerText="✔ Added!"; btn.style.background="green"; btn.classList.add("bounce");
+  setTimeout(()=>{ btn.innerText="ADD TO BAG"; btn.style.background="#000"; btn.classList.remove("bounce"); },1500);
+}
+
+function renderCart(){
+  cartItemsEl.innerHTML = "";
+  let subtotal=0;
+  cart.forEach((i,idx)=>{
+    subtotal += i.price*i.qty;
+    cartItemsEl.innerHTML += `
+      <div class="cart-item">
+        <img src="${i.image}">
+        <div class="cart-item-info">
+          <p>${i.name}</p>
+          <p>Rs.${i.price}</p>
+          <div class="quantity-selector">
+            <button onclick="changeCartQty(${idx},-1)">-</button>
+            <span>${i.qty}</span>
+            <button onclick="changeCartQty(${idx},1)">+</button>
+          </div>
+          <div class="item-actions">
+            <i class="fa-regular fa-trash-can" onclick="removeItem(${idx})"></i>
+          </div>
+        </div>
+      </div>`;
+  });
+  document.getElementById("cartSubtotal").innerText="Rs."+subtotal;
+  document.getElementById("progressFill").style.width = Math.min(subtotal/8000*100,100)+"%";
+}
+
+function changeCartQty(idx,delta){ cart[idx].qty=Math.max(1,cart[idx].qty+delta); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); }
+function removeItem(idx){ lastRemovedItem=cart[idx]; lastRemovedIndex=idx; cart.splice(idx,1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); document.getElementById("undoToast").style.display="flex"; setTimeout(()=>document.getElementById("undoToast").style.display="none",4000);}
+function undoRemove(){ if(lastRemovedItem){ cart.splice(lastRemovedIndex,0,lastRemovedItem); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); } document.getElementById("undoToast").style.display="none"; }
+
+document.querySelector(".add-to-cart").onclick=()=>{
+  const s=document.querySelector(".sizes .selected");
+  if(!s){ alert("Select size first"); return;}
+  addToCart({name:product.title+" ("+s.innerText+")", price:product.price, image:product.images[0], qty});
+}
+
+// SIDEBAR BUTTONS
+document.getElementById("closeCartBtn").onclick=()=>cartSidebar.classList.remove("active");
+document.getElementById("continueShoppingBtn").onclick=()=>cartSidebar.classList.remove("active");
+document.getElementById("checkoutBtn").onclick=()=>window.location.href='checkout.html';
+
+// INITIAL RENDER
+renderCart();
+updateCartCount();
+</script>
+</body>
+</html>

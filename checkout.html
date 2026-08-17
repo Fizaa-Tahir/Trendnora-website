@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout Page</title>
+<style>
+/* HEADER */
+.main-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  z-index: 9999;
+}
+.header-left { display:flex; align-items:center; gap:10px; }
+.logo { font-size:42px; font-weight:bold; }
+body { font-family: Arial, sans-serif; margin:0; padding-top:90px; background:#f8f8f8; }
+.checkout-container { display:flex; justify-content:center; gap:30px; max-width:1200px; margin:auto; flex-wrap:wrap; }
+
+/* Left: Shipping Form + Payment */
+.shipping-payment { background:#fff; padding:30px; flex:2; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); min-width:300px; }
+.shipping-payment h2 { margin-top:0; font-size:20px; color:#555; margin-bottom:15px; }
+.shipping-payment input, .shipping-payment select { width:100%; padding:12px; margin:10px 0 20px 0; border-radius:4px; border:1px solid #ccc; font-size:14px; }
+.shipping-payment label { font-size:14px; margin-bottom:5px; display:block; color:#333; }
+.payment-method { margin-top:30px; }
+.payment-method input { width:auto; margin-right:10px; }
+
+/* Place Order Button */
+#placeOrderBtn { padding:14px; margin-top:20px; background:#000; color:#fff; border:none; cursor:pointer; font-weight:bold; width:100%; }
+
+/* Right: Order Summary */
+.order-summary { flex:1; background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); height:fit-content; min-width:250px; }
+.order-summary h3 { margin-top:0; font-size:18px; margin-bottom:20px; }
+.order-item { display:flex; gap:15px; margin-bottom:20px; align-items:center; }
+.order-item img { width:60px; height:60px; object-fit:cover; border-radius:4px; }
+.order-item-details { flex:1; }
+.order-item-details p { margin:2px 0; font-size:14px; color:#333; }
+.quantity-selector { display:flex; align-items:center; gap:5px; margin-top:5px; }
+.quantity-selector button { width:25px; height:25px; cursor:pointer; }
+.remove-btn { margin-top:5px; color:red; cursor:pointer; font-weight:bold; }
+.order-total { border-top:1px dashed #ccc; padding-top:15px; font-size:16px; font-weight:bold; }
+.order-total p:last-child { font-size:18px; font-weight:700; color:#222; }
+.note { font-size:12px; color:#777; margin-top:10px; }
+
+/* Confirmation Page */
+#confirmation { display:none; text-align:center; padding:50px; background:#fff; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+#confirmation h2 { color:green; font-size:24px; margin-bottom:20px; }
+#confirmation button { padding:12px 20px; background:#000; color:#fff; border:none; cursor:pointer; font-weight:bold; margin-top:20px; }
+</style>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="header-left">
+    <span class="logo">Trendora</span>
+  </div>
+</header>
+
+<div class="checkout-container">
+
+  <!-- Shipping Form + Payment -->
+  <div class="shipping-payment">
+    <h2> Shipping</h2>
+    <form id="checkoutForm">
+      <label>First Name *</label>
+      <input type="text" name="firstName" placeholder="First Name" required>
+      <label>Last Name *</label>
+      <input type="text" name="lastName" placeholder="Last Name" required>
+      <label> Address  *</label>
+      <input type="text" name="address" placeholder="Please Write Complete Address]" required>
+      
+     <label>Country *</label>
+<input type="text" name="country" value="Pakistan" readonly>
+
+      
+      <label>Province *</label>
+      <select name="province" id="provinceSelect" required>
+        <option value="">Select Province</option>
+        <option value="Punjab">Punjab</option>
+        <option value="Sindh">Sindh</option>
+        <option value="KPK">Khyber Pakhtunkhwa</option>
+        <option value="Balochistan">Balochistan</option>
+      </select>
+      
+      <label>City *</label>
+      <select name="city" id="citySelect" required>
+        <option value="">Select City</option>
+      </select>
+      
+      <label>Postal Code</label>
+      <input type="text" name="postalCode" placeholder="Postal Code">
+      <label>Phone *</label>
+      <input type="text" name="phone" placeholder="+92 XXXXXXXXXX" required>
+    </form>
+
+    <div class="payment-method">
+      <h2> Payment</h2>
+      <label><input type="radio" name="payment" checked> Cash on Delivery (COD)</label>
+    </div>
+
+    <button id="placeOrderBtn">Place Order</button>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-summary" id="order-summary">
+    <h3>ORDER SUMMARY</h3>
+  </div>
+
+</div>
+
+<!-- Confirmation -->
+<div id="confirmation">
+  <h2>✅ Thank you! Your order is confirmed.</h2>
+  <p>You will receive an email confirmation shortly.</p>
+  <button id="continueShoppingBtn">Continue Shopping</button>
+</div>
+
+<script>
+// CITY DATA
+const cities = {
+  "Punjab": ["Lahore","Faisalabad","Rawalpindi","Multan","Gujranwala","Sialkot","Bahawalpur"],
+  "Sindh": ["Karachi","Hyderabad","Sukkur","Larkana","Nawabshah","Thatta","Mirpurkhas"],
+  "KPK": ["Peshawar","Mardan","Abbottabad","Swat","Dera Ismail Khan","Charsadda","Kohat"],
+  "Balochistan": ["Quetta","Gwadar","Sibi","Turbat","Khuzdar","Kalat","Lasbela"]
+};
+
+const provinceSelect = document.getElementById("provinceSelect");
+const citySelect = document.getElementById("citySelect");
+
+provinceSelect.addEventListener("change", ()=>{
+  const selectedProvince = provinceSelect.value;
+  citySelect.innerHTML = '<option value="">Select City</option>';
+  if(cities[selectedProvince]){
+    cities[selectedProvince].forEach(c=>{
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      citySelect.appendChild(opt);
+    });
+  }
+});
+
+// CART DATA
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const orderSummary = document.getElementById('order-summary');
+const shipping = 200;
+const fbr = 1;
+
+function renderCheckout(){
+  orderSummary.innerHTML = '<h3>ORDER SUMMARY</h3>';
+  let subtotal=0;
+
+  if(cart.length===0){
+    orderSummary.innerHTML += "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  cart.forEach((item,index)=>{
+    subtotal += item.price * item.qty;
+
+    const orderItem = document.createElement('div');
+    orderItem.classList.add('order-item');
+    orderItem.innerHTML=`
+      <img src="${item.image}" alt="${item.name}">
+      <div class="order-item-details">
+        <p>${item.name}</p>
+        <p>Rs.${item.price}</p>
+        <div class="quantity-selector">
+          <button onclick="changeQty(${index},-1)">-</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${index},1)">+</button>
+        </div>
+        <div class="remove-btn" onclick="removeItem(${index})">Remove</div>
+      </div>
+    `;
+    orderSummary.appendChild(orderItem);
+  });
+
+  const total = subtotal + shipping + fbr;
+
+  orderSummary.innerHTML += `
+    <div class="order-total">
+      <p>Subtotal: Rs.${subtotal}</p>
+      <p>Shipping: Rs.${shipping}</p>
+      <p>FBR POS: Rs.${fbr}</p>
+      <p>Total: Rs.${total}</p>
+    </div>
+    <div class="note">
+      You may receive multiple packages for one order. Discounted items are non-exchangeable & non-returnable. Nationwide orders will be delivered within 5 - 7 business days.
+    </div>
+  `;
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function changeQty(index,delta){
+  cart[index].qty += delta;
+  if(cart[index].qty<1) cart[index].qty=1;
+  renderCheckout();
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCheckout();
+}
+
+// INITIAL RENDER
+renderCheckout();
+
+// PLACE ORDER BUTTON
+const placeOrderBtn = document.getElementById('placeOrderBtn');
+const checkoutForm = document.getElementById('checkoutForm');
+const confirmationDiv = document.getElementById('confirmation');
+
+placeOrderBtn.addEventListener('click', ()=>{
+  if(checkoutForm.checkValidity() && provinceSelect.value && citySelect.value){
+    localStorage.removeItem('cart'); // clear cart
+    document.querySelector('.checkout-container').style.display='none';
+    confirmationDiv.style.display='block';
+  } else {
+    alert("Please fill all required fields!");
+  }
+});
+
+// CONTINUE SHOPPING BUTTON
+document.getElementById('continueShoppingBtn').addEventListener('click', ()=>{
+  window.location.href = "index.html"; // update to your main product page URL
+});
+</script>
+
+</body>
+</html>

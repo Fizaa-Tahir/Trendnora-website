@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+
+/* HEADER CART ICON */
+.cart{position:relative;cursor:pointer;}
+.cart span{
+  position:absolute;
+  top:-6px;
+  right:-8px;
+  background:#000;
+  color:#fff;
+  border-radius:50%;
+  font-size:10px;
+  padding:2px 5px;
+}
+
+/* CART SIDEBAR */
+.cart-sidebar{
+  position:fixed;
+  top:0;
+  right:-420px;
+  width:420px;
+  height:100%;
+  background:#fff;
+  box-shadow:-8px 0 25px rgba(0,0,0,0.15);
+  transition:right 0.35s ease;
+  z-index:10000;
+}
+.cart-sidebar.active{right:0;}
+
+.cart-header{
+  position:sticky;
+  top:0;
+  background:#fff;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+.cart-header h3{font-size:18px;}
+.close-cart{font-size:26px;cursor:pointer;}
+
+.free-shipping{
+  padding:16px 20px;
+  font-size:13px;
+  background:#fafafa;
+  border-bottom:1px solid #eee;
+}
+.progress-bar{
+  height:6px;
+  background:#ddd;
+  border-radius:10px;
+  margin-top:8px;
+}
+.progress-fill{
+  height:100%;
+  background:#000;
+  border-radius:10px;
+}
+
+.cart-items{padding:10px 20px;}
+.cart-item{
+  display:flex;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+}
+.cart-item img{
+  width:90px;
+  height:110px;
+  object-fit:cover;
+  border-radius:4px;
+}
+.cart-item-info p{font-size:13px;margin:4px 0;}
+.cart-item-info p:first-child{font-weight:600;}
+
+.quantity-selector{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+}
+.quantity-selector button{
+  width:28px;
+  height:28px;
+  border:1px solid #000;
+  background:none;
+  cursor:pointer;
+}
+
+.item-actions i{
+  font-size:18px;
+  color:#777;
+  cursor:pointer;
+  transition:0.2s;
+}
+.item-actions i:hover{
+  color:#d10000;
+  transform:scale(1.3);
+}
+
+.cart-subtotal{
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+  border-top:1px solid #eee;
+}
+
+.cart-buttons{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.cart-buttons button{
+  padding:14px;
+  font-weight:600;
+  cursor:pointer;
+}
+#checkoutBtn{background:#000;color:#fff;}
+#continueShoppingBtn{background:#fff;border:1px solid #000;}
+
+#undoToast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  color:#fff;
+  padding:12px 18px;
+  font-size:13px;
+  display:none;
+  gap:12px;
+  z-index:99999;
+}
+#undoToast span{
+  cursor:pointer;
+  text-decoration:underline;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CART ICON -->
+<div class="cart" id="headerCart">
+  <i class="fa-solid fa-bag-shopping fa-2x"></i>
+  <span id="cartCount">0</span>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>SHOPPING CART</h3>
+    <span class="close-cart" id="closeCartBtn">&times;</span>
+  </div>
+
+  <div class="free-shipping">
+    <p>FREE SHIPPING OVER Rs.8,000</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-subtotal">
+    <span>SUBTOTAL</span>
+    <span id="cartSubtotal">Rs.0</span>
+  </div>
+
+  <div class="cart-buttons">
+    <button id="checkoutBtn">CHECKOUT</button>
+    <button id="continueShoppingBtn">CONTINUE SHOPPING</button>
+  </div>
+</div>
+
+<div id="undoToast">
+  Item removed <span onclick="undoRemove()">UNDO</span>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const cartSidebar=document.getElementById("cartSidebar");
+const cartItemsEl=document.getElementById("cartItems");
+const cartCountEl=document.getElementById("cartCount");
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let lastRemovedItem=null;
+let lastRemovedIndex=null;
+
+function updateCartCount(){
+  cartCountEl.innerText=cart.reduce((a,i)=>a+i.qty,0);
+}
+
+function renderCart(){
+  cartItemsEl.innerHTML="";
+  let subtotal=0;
+
+  cart.forEach((i,idx)=>{
+    subtotal+=i.price*i.qty;
+    cartItemsEl.innerHTML+=`
+      <div class="cart-item">
+        <img src="${i.image}">
+        <div class="cart-item-info">
+          <p>${i.name}</p>
+          <p>Rs.${i.price}</p>
+          <div class="quantity-selector">
+            <button onclick="changeCartQty(${idx},-1)">-</button>
+            <span>${i.qty}</span>
+            <button onclick="changeCartQty(${idx},1)">+</button>
+          </div>
+          <div class="item-actions">
+            <i class="fa-regular fa-trash-can" onclick="removeItem(${idx})"></i>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  cartSubtotal.innerText="Rs."+subtotal;
+  progressFill.style.width=Math.min(subtotal/8000*100,100)+"%";
+}
+
+window.changeCartQty=function(idx,delta){
+  cart[idx].qty=Math.max(1,cart[idx].qty+delta);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
+  updateCartCount();
+}
+
+window.removeItem=function(idx){
+  lastRemovedItem=cart[idx];
+  lastRemovedIndex=idx;
+  cart.splice(idx,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
+  updateCartCount();
+  undoToast.style.display="flex";
+  setTimeout(()=>undoToast.style.display="none",4000);
+}
+
+window.undoRemove=function(){
+  if(lastRemovedItem){
+    cart.splice(lastRemovedIndex,0,lastRemovedItem);
+    localStorage.setItem("cart",JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+  }
+  undoToast.style.display="none";
+}
+
+/* TOGGLES */
+headerCart.onclick=()=>cartSidebar.classList.add("active");
+closeCartBtn.onclick=()=>cartSidebar.classList.remove("active");
+continueShoppingBtn.onclick=()=>cartSidebar.classList.remove("active");
+
+/* CHECKOUT REDIRECT */
+checkoutBtn.onclick=()=>window.location.href="checkout.html";
+
+renderCart();
+updateCartCount();
+
+});
+</script>
+
+</body>
+</html>

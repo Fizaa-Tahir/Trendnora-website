@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trendora - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Swiper CSS (REQUIRED) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="stylesheet.css">
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="javascript.js"></script>
+</head>
+<body>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-left">
+      <i class="fas fa-bars menu-icon"></i>
+      <span class="logo">Trendora</span>
+    </div>
+
+    <nav class="nav-center">
+      <a href="index.html">Home</a>
+      <a href="rtw.html">Ready To Wear</a>
+      <a href="unstitched.html">Unstitched</a>
+      <a href="wed.html">Wedding</a>
+    </nav>
+
+<!-- Search Icon -->
+<div class="header-right">
+  
+  <i id="searchIcon" class="fas fa-search"></i>
+  <i class="fas fa-shopping-bag" id="cartIcon"></i>
+</div>
+
+<!-- Search Overlay -->
+<div id="searchOverlay" class="search-overlay"></div>
+
+<!-- Search Sidebar -->
+<div id="searchSidebar" class="search-sidebar">
+  <div class="search-header">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Find Your Favourites"
+      autocomplete="on"
+    />
+    <i id="closeSearch" class="fas fa-times"></i>
+  </div>
+
+  <div id="searchContent" class="search-content">
+    <h4>Suggestions For You:</h4>
+    <ul class="search-suggestions">
+      <a href="rtw.html"><li >RTW</li></a>
+      <a href="unstitched.html"><li >Unstitched</li></a>
+      <a href="wed.html"><li >Luxury</li></a>
+
+     
+
+
+      
+    </ul>
+  </div>
+</div>
+
+<!-- MENU OVERLAY (reuse same overlay if you want) -->
+<div id="menuOverlay" class="search-overlay"></div>
+
+<!-- MENU SIDEBAR -->
+<div id="menuSidebar" class="menu-sidebar">
+  <div class="menu-header">
+    <h3>MENU</h3>
+    <i id="closeMenu" class="fas fa-times"></i>
+  </div>
+
+  <ul class="menu-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="rtw.html">Ready to Wear</a></li>
+    <li><a href="unstitched.html">Unstitched</a></li>
+    <li><a href="wed.html">Luxury</a></li>
+    <li><a href="CONTACT.HTML">Contact</a></li>
+  </ul>
+</div>
+
+
+
+
+
+
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h3>SHOPPING CART</h3>
+        <span class="close-cart" id="closeCartBtn">&times;</span>
+      </div>
+
+      <div class="free-shipping">
+        <p>FREE SHIPPING OVER Rs.8,000</p>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="cart-subtotal">
+        <span>SUBTOTAL</span>
+        <span id="cartSubtotal">Rs.0</span>
+      </div>
+
+      <div class="cart-buttons">
+        <button id="checkoutBtn">CHECKOUT</button>
+        <button id="continueShoppingBtn">CONTINUE SHOPPING</button>
+      </div>
+    </div>
+
+    <div id="undoToast">Item removed <span onclick="undoRemove()">UNDO</span></div>
+  </header>
+
+  <!-- HERO SLIDE 1 -->
+  <a href="rtw.html" class="swiper-slide-link">
+    <div class="slide active">
+      <img src="homepage.webp" alt="Slide 1">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1>WINTER '25 – NEW ARRIVALS</h1>
+        <span class="shop-now">SHOP NOW</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- HERO SLIDE 2 -->
+   <a href="unstitched.html" class="swiper-slide-link">
+  <div class="slide">
+    <img src="slide7.webp" alt="Slide 7">
+    <div class="overlay"></div>
+    <div class="hero-text">
+      <h1>UNSTITCHED COLLECTION</h1>
+      <p>WINTER 2026</p>
+      <span class="shop-now">SHOP NOW</span>
+    </div>
+  </div>
+</a>
+
+
+  <!-- HERO SLIDE 3 -->
+  <a href="wed.html" class="swiper-slide-link">
+    <div class="slide">
+      <img src="slide2.webp" alt="Slide 3">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>WEDDING COLLECTION</h2>
+        <h1>WED '26 – NEW ARRIVALS</h1>
+        <span class="shop-now">SHOP NOW</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- HERO ARROWS -->
+  <i class="fas fa-chevron-left prev" id="prev"></i>
+  <i class="fas fa-chevron-right next" id="next"></i>
+
+</section>
+<!-- ================= HERO CLOSED ================= -->
+
+<!-- ================= NEW IN SECTION ================= -->
+<section class="new-in-section">
+
+  <!-- LEFT TEXT -->
+ <div class="new-in-text">
+  <span class="section-tag">NEW IN</span>
+  <h2>Fresh Arrivals</h2>
+  <p>
+    Discover the latest unstitched & pret collections inspired by
+    modern elegance and timeless craft.
+  </p>
+  <a href="wed.html" class="shop-link">SHOP NEW IN</a>
+</div>
+
+<div class="newInSwiper swiper">
+  <div class="swiper-wrapper">
+    <!-- slides -->
+  
+
+  <!-- RIGHT SLIDER -->
+  
+      <div class="swiper-slide">
+        <a href="unstitched.html">
+          <img src="slide4.webp" alt="">
+          <br>
+          <h4 style="text-align: center; font-size: medium;">DAY TO DAY WINTER</h4>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="rtw.html">
+          <img src="slide5.webp" alt="">
+          <br>
+          <h4 style="text-align: center; font-size: medium;">THE SOUTH EDIT</h4>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="wed.html">
+          <img src="w3.webp" alt="">
+          <br>
+          <h4 style="text-align: center;font-size: medium;">LUXURY PRET WINTER</h4>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</section>
+<!-- Search Overlay -->
+<div id="searchOverlay" class="search-overlay" onclick="closeSearch()"></div>
+
+<!-- Search Sidebar -->
+<div id="searchSidebar" class="search-sidebar">
+  <div class="search-header">
+    <input type="text" placeholder="Find Your Favourites" />
+    <i class="fas fa-times" onclick="closeSearch()"></i>
+  </div>
+
+  <div class="search-content">
+    <h4>Suggestions For You:</h4>
+    <ul>
+      <li>Flat 50% OFF</li>
+      <li>Ready to Wear</li>
+      <li>Under Rs. 2000</li>
+      <li>Under Rs. 5000</li>
+      <li>Winter '25</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= NEW IN CLOSED ================= -->
+
+<!-- Swiper Init -->
+
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- About / Logo -->
+    <div class="footer-section footer-about">
+      <h2 class="footer-logo">Trendora</h2>
+      <p>Elevate your style with our Ready-to-Wear, Unstitched, and Luxury collections.</p>
+      <div class="social-icons">
+        <a ><i class="fab fa-facebook-f"></i></a>
+        <a ><i class="fab fa-instagram"></i></a>
+        <a ><i class="fab fa-twitter"></i></a>
+        <a ><i class="fab fa-pinterest-p"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section footer-links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="rtw.html">Ready to Wear</a></li>
+        <li><a href="unstitched.html">Unstitched</a></li>
+        <li><a href="wed.html">Luxury</a></li>
+        <li><a href="CONTACT.HTML">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="footer-section footer-newsletter">
+      <h3>Subscribe to Newsletter</h3>
+      <p>Get latest trends, offers & news straight to your inbox.</p>
+      <form id="newsletterForm">
+        <input type="email" placeholder="Your Email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Trendora. All Rights Reserved.</p>
+  </div>
+</footer>
+
+
+<script>
+new Swiper(".newInSwiper", {
+  slidesPerView: "auto",
+  spaceBetween: 20,
+  loop: true,
+  autoplay: {
+    delay: 2500,
+    disableOnInteraction: false,
+  }
+});
+
+/* ================= CART ================= */
+
+// Load cart
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let lastRemovedItem = null;
+let lastRemovedIndex = null;
+
+// Elements
+const cartIcon = document.getElementById("cartIcon");
+const cartSidebar = document.getElementById("cartSidebar");
+const closeCartBtn = document.getElementById("closeCartBtn");
+const continueBtn = document.getElementById("continueShoppingBtn");
+const cartItemsEl = document.getElementById("cartItems");
+const cartSubtotalEl = document.getElementById("cartSubtotal");
+const progressFill = document.getElementById("progressFill");
+const undoToast = document.getElementById("undoToast");
+
+/* OPEN CART → ONLY FROM ICON */
+cartIcon.addEventListener("click", () => {
+  cartSidebar.classList.add("active");
+});
+
+/* CLOSE CART */
+closeCartBtn.addEventListener("click", () => {
+  cartSidebar.classList.remove("active");
+});
+continueBtn.addEventListener("click", () => {
+  cartSidebar.classList.remove("active");
+});
+
+/* RENDER CART */
+function renderCart() {
+  cartItemsEl.innerHTML = "";
+  let subtotal = 0;
+
+  cart.forEach((item, idx) => {
+    subtotal += item.price * item.qty;
+
+    cartItemsEl.innerHTML += `
+      <div class="cart-item">
+        ${item.image ? `<img src="${item.image}">` : ""}
+        <div class="cart-item-info">
+          <p>${item.name}</p>
+          <p>Rs.${item.price}</p>
+          <div class="quantity-selector">
+            <button onclick="changeQty(${idx}, -1)">-</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty(${idx}, 1)">+</button>
+          </div>
+          <div class="item-actions">
+            <i class="fa-regular fa-trash-can" onclick="removeItem(${idx})"></i>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  cartSubtotalEl.innerText = "Rs." + subtotal;
+  progressFill.style.width = Math.min(subtotal / 8000 * 100, 100) + "%";
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+function changeQty(idx, delta) {
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  renderCart();
+}
+
+
+
+  
+
+/* REMOVE ITEM */
+function removeItem(idx) {
+  lastRemovedItem = cart[idx];
+  lastRemovedIndex = idx;
+
+  cart.splice(idx, 1);
+  renderCart();
+
+  undoToast.style.display = "flex";
+  setTimeout(() => {
+    undoToast.style.display = "none";
+  }, 4000);
+}
+
+/* UNDO REMOVE */
+function undoRemove() {
+  if (lastRemovedItem) {
+    cart.splice(lastRemovedIndex, 0, lastRemovedItem);
+    lastRemovedItem = null;
+    renderCart();
+  }
+  undoToast.style.display = "none";
+}
+
+/* CHECKOUT */
+document.getElementById("checkoutBtn").onclick = () => {
+  window.location.href = "checkout.html";
+};
+
+/* INITIAL LOAD */
+renderCart();
+
+
+
+
+ const allProducts = [
+  { name: "Khaddar Printed 2pc", category: "rtw", price: 5000, link: "rtw1.html", image: "pret1.webp" },
+  { name: "Khaddar Floral Shirt", category: "rtw", price: 4500, link: "rtw2.html", image: "pret2.webp" },
+  { name: "Khaddar Embroidered Shirt 2pc", category: "rtw", price: 6000, link: "rtw3.html", image: "pret3.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "rtw", price: 2500, link: "rtw4.html", image: "pret4.webp" },
+  { name: "Viscose Pastel Shirt", category: "women", price: 2000, link: "rtw5.html", image: "pret5.webp" },
+  { name: "Viscose Shirt 2pc", category: "women", price: 3000, link: "rtw6.html", image: "pret6.webp" },
+  { name: "Cotton Shirt 2pc", category: "women", price: 3500, link: "rtw7.html", image: "pret7.webp" },
+  { name: "Light Khaddar Printed Shirt", category: "women", price: 4000, link: "rtw8.html", image: "pret8.webp" },
+  { name: "Embroidered Linen Shirt 2pc", category: "women", price: 5500, link: "rtw9.html", image: "pret9.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "women", price: 4800, link: "rtw10.html", image: "pret10.webp" },
+  { name: "Floral Print Shirt 2pc", category: "women", price: 5200, link: "rtw11.html", image: "pret11.webp" },
+  { name: "Linen Printed Shirt 2pc", category: "women", price: 4700, link: "rtw12.html", image: "pret12.webp" },
+  { name: "Linen Print Shirt 2pc", category: "women", price: 4300, link: "rtw13.html", image: "pret13.webp" },
+  { name: "Pastel Shades Shirt 2pc", category: "women", price: 3900, link: "rtw14.html", image: "pret14.webp" },
+  { name: "Luxury Embroidered Shirt 2pc", category: "women", price: 5000, link: "rtw15.html", image: "pret15.webp" },
+  { name: "Maroon Shirt 2pc", category: "women", price: 5600, link: "rtw16.html", image: "pret16.webp" },
+  // UNSTITCHED Collection
+  { name: "Khaddar Printed 2pc", category: "Printed", price: 5000, link: "us1.html", image: "u1.webp" },
+  { name: "Khaddar Floral Shirt", category: "Printed", price: 4500, link: "us2.html", image: "u2.webp" },
+  { name: "Khaddar Embroidered Shirt 2pc", category: "Printed", price: 6000, link: "us3.html", image: "u3.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "Printed", price: 2500, link: "us4.html", image: "u4.webp" },
+  { name: "Viscose Pastel Shirt", category: "Printed", price: 2000, link: "us5.jpg", image: "u5.jpg" },
+  { name: "Viscose Shirt 2pc", category: "Embroidered", price: 3000, link: "us6.webp", image: "u6.webp" },
+  { name: "Cotton Shirt 2pc", category: "Embroidered", price: 3500, link: "us7.webp", image: "u7.webp" },
+  { name: "Light Khaddar Printed Shirt", category: "Embroidered", price: 4000, link: "us8.webp", image: "u8.webp" },
+  { name: "Embroidered Linen Shirt 2pc", category: "Embroidered", price: 5500, link: "us9.webp", image: "u9.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "Embroidered", price: 4800, link: "us10.jpg", image: "u10.jpg" },
+  { name: "Floral Print Shirt 2pc", category: "Embroidered", price: 5200, link: "us11.webp", image: "u11.webp" },
+  { name: "Linen Printed Shirt 2pc", category: "Printed", price: 4700, link: "us12.webp", image: "u12.webp" },
+  { name: "Linen Print Shirt 2pc", category: "Embroidered", price: 4300, link: "us13.webp", image: "u13.webp" },
+  { name: "Pastel Shades Shirt 2pc", category: "Embroidered", price: 3900, link: "us14.webp", image: "u14.webp" },
+  { name: "Luxury Embroidered Shirt 2pc", category: "Embroidered", price: 5000, link: "us15.webp", image: "u15.webp" },
+  { name: "Maroon Shirt 2pc", category: "Printed", price: 5600, link: "us16.webp", image: "u16.webp" },
+
+  // Wedding Edit Collection
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 50000, link: "w1.html", image: "w1.webp" },
+  { name: "Luxury jacquarad 3pc", category: "Luxury", price: 45000, link: "w2.html", image: "w2.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 60000, link: "w3.html", image: "w3.webp" },
+  { name: "Luxury Embroidered 2pc", category: "Luxury", price: 25000, link: "w4.html", image: "w4.webp" },
+  { name: "Viscose Luxury Emroidered 3pc", category: "casual", price: 20000, link: "w5.html", image: "w5.webp" },
+  { name: "Viscose Luxury 3pc", category: "casual", price: 30000, link: "w6.html", image: "w6.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 35000, link: "w7.html", image: "w7.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 40000, link: "w8.html", image: "w8.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 55000, link: "w9.html", image: "w9.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 48000, link: "w10.html", image: "w10.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 52000, link: "w11.html", image: "w11.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 47000, link: "w12.html", image: "w12.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 43000, link: "w13.html", image: "w13.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 39000, link: "w14.html", image: "w14.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 50000, link: "w15.html", image: "w15.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 56000, link: "w16.jpg", image: "w16.jpg" }
+];
+
+  // ...add all other products here
+
+
+const searchIcon = document.getElementById("searchIcon");
+const searchSidebar = document.getElementById("searchSidebar");
+const searchOverlay = document.getElementById("searchOverlay");
+const closeSearch = document.getElementById("closeSearch");
+const searchInput = document.getElementById("searchInput");
+const searchContent = document.getElementById("searchContent");
+
+/* OPEN SEARCH */
+searchIcon.addEventListener("click", () => {
+  searchSidebar.classList.add("active");
+  searchOverlay.classList.add("active");
+  searchInput.focus();
+});
+
+/* CLOSE SEARCH */
+function closeSearchSidebar() {
+  searchSidebar.classList.remove("active");
+  searchOverlay.classList.remove("active");
+  searchInput.value = "";
+  resetSuggestions();
+}
+
+closeSearch.addEventListener("click", closeSearchSidebar);
+searchOverlay.addEventListener("click", closeSearchSidebar);
+
+/* RESET SUGGESTIONS */
+function resetSuggestions() {
+  searchContent.innerHTML = `
+    <h4>Suggestions For You:</h4>
+    <ul class="search-suggestions">
+      <li data-query="50%">Flat 50% OFF</li>
+      <li data-query="khaddar">Ready to Wear</li>
+      <li data-query="2000">Under Rs. 2,000</li>
+      <li data-query="5000">Under Rs. 5,000</li>
+      <li data-query="winter">Winter '25</li>
+    </ul>
+  `;
+  bindSuggestionClicks();
+}
+
+/* LIVE SEARCH */
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.toLowerCase().trim();
+
+  if (!q) {
+    resetSuggestions();
+    return;
+  }
+
+  const results = allProducts.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    String(p.price).includes(q)
+  );
+
+  if (!results.length) {
+    searchContent.innerHTML = "<p>No results found</p>";
+    return;
+  }
+
+  searchContent.innerHTML = results.map(p => `
+    <a href="${p.link}" class="search-result">
+      <img src="${p.image}" alt="">
+      <div>
+        <p>${p.name}</p>
+        <span>Rs.${p.price}</span>
+      </div>
+    </a>
+  `).join("");
+});
+
+/* CLICKABLE SUGGESTIONS */
+function bindSuggestionClicks() {
+  document.querySelectorAll(".search-suggestions li").forEach(item => {
+    item.onclick = () => {
+      searchInput.value = item.dataset.query;
+      searchInput.dispatchEvent(new Event("input"));
+    };
+  });
+}
+
+bindSuggestionClicks();
+const menuIcon = document.querySelector(".menu-icon");
+const menuSidebar = document.getElementById("menuSidebar");
+const menuOverlay = document.getElementById("menuOverlay");
+const closeMenu = document.getElementById("closeMenu");
+
+/* OPEN MENU */
+menuIcon.addEventListener("click", () => {
+  menuSidebar.classList.add("active");
+  menuOverlay.classList.add("active");
+});
+
+/* CLOSE MENU */
+function closeMenuSidebar(){
+  menuSidebar.classList.remove("active");
+  menuOverlay.classList.remove("active");
+}
+
+closeMenu.addEventListener("click", closeMenuSidebar);
+menuOverlay.addEventListener("click", closeMenuSidebar);
+
+const newInSwiper = new Swiper('.newInSwiper', {
+  slidesPerView: 3,
+  spaceBetween: 20,
+  loop: true,
+  speed: 3000,
+  autoplay: {
+    delay: 0,
+    disableOnInteraction: false,
+  },
+  freeMode: true,
+  freeModeMomentum: false,
+});
+
+
+
+</script>
+
+
+</body>
+</html>
