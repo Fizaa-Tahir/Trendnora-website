@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trendora - UNSTITCHED Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="rtw.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+   <style>
+    /* Basic Grid Styles*/
+    .product-grid {
+      display: grid;
+      gap: 20px;
+      padding: 20px 50px;
+    }
+    .product-grid.grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .product-grid.grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .product-grid.grid-1 { grid-template-columns: 1fr; }
+
+    /* Hide class for filter */
+    .product-card.hide { display: none; }
+  </style>  
+</head>
+<body>
+
+  <!-- HEADER -->
+<header class="main-header">
+    <div class="header-left">
+      <i class="fas fa-bars menu-icon"></i>
+      <span class="logo">Trendora</span>
+    </div>
+
+   
+
+    <!-- Search Icon -->
+<div class="header-right">
+  <i id="searchIcon" class="fas fa-search"></i>
+
+  <div style="position:relative; display:inline-block;">
+    <i class="fas fa-shopping-bag" id="cartIcon"></i>
+    <span id="cartCount" class="cart-count">0</span>
+  </div>
+</div>
+
+
+
+
+ </header>
+ <!-- Search Overlay -->
+<div id="searchOverlay" class="search-overlay"></div>
+
+<!-- Search Sidebar -->
+<div id="searchSidebar" class="search-sidebar">
+  <div class="search-header">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Find Your Favourites"
+      autocomplete="on"
+    />
+    <i id="closeSearch" class="fas fa-times"></i>
+  </div>
+
+  <div id="searchContent" class="search-content">
+    <h4>Suggestions For You:</h4>
+    <ul class="search-suggestions">
+      <a href="rtw.html"><li >RTW</li></a>
+      <a href="unstitched.html"><li >Unstitched</li></a>
+      <a href="wed.html"><li >Luxury</li></a>
+
+     
+
+
+      
+    </ul>
+  </div>
+  <!-- MENU OVERLAY (reuse same overlay if you want) -->
+<div id="menuOverlay" class="search-overlay"></div>
+
+<!-- MENU SIDEBAR -->
+<div id="menuSidebar" class="menu-sidebar">
+  <div class="menu-header">
+    <h3>MENU</h3>
+    <i id="closeMenu" class="fas fa-times"></i>
+  </div>
+
+  <ul class="menu-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="rtw.html">Ready to Wear</a></li>
+    <li><a href="unstitched.html">Unstitched</a></li>
+    <li><a href="wed.html">Luxury</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div>
+
+
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>SHOPPING CART</h3>
+    <span class="close-cart" id="closeCartBtn">&times;</span>
+  </div>
+
+  <div class="free-shipping">
+    <p>FREE SHIPPING OVER Rs.8,000</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-subtotal">
+    <span>SUBTOTAL</span>
+    <span id="cartSubtotal">Rs.0</span>
+  </div>
+
+  <div class="cart-buttons">
+    <button id="checkoutBtn">CHECKOUT</button>
+    <button id="continueShoppingBtn">CONTINUE SHOPPING</button>
+  </div>
+</div>
+
+<!-- UNDO TOAST -->
+<div id="undoToast">
+  Item removed <span onclick="undoRemove()">UNDO</span>
+</div>
+
+
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h3>SHOPPING CART</h3>
+        <span class="close-cart" id="closeCartBtn">&times;</span>
+      </div>
+
+      <div class="free-shipping">
+        <p>FREE SHIPPING OVER Rs.8,000</p>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="cart-subtotal">
+        <span>SUBTOTAL</span>
+        <span id="cartSubtotal">Rs.0</span>
+      </div>
+
+      <div class="cart-buttons">
+        <button id="checkoutBtn">CHECKOUT</button>
+        <button id="continueShoppingBtn">CONTINUE SHOPPING</button>
+      </div>
+    </div>
+
+    <div id="undoToast">Item removed <span onclick="undoRemove()">UNDO</span></div>
+ 
+
+  
+
+  <!-- PAGE TITLE + Filter/Sort -->
+  <section class="page-title">
+    <div class="title-left">
+      <h1>WINTER ’26</h1>
+      <span class="subtitle"> UNSTITCHED/span>
+    </div>
+    <div class="title-right">
+      <select id="filter">
+        <option value="all">All</option>
+        <option value="Embroidered">embroidered</option>
+        <option value="Printed">Printed</option>
+      </select>
+      <select id="sort">
+        <option value="default">Sort By</option>
+        <option value="price-asc">Price Low to High</option>
+        <option value="price-desc">Price High to Low</option>
+        <option value="name-asc">Name A-Z</option>
+        <option value="name-desc">Name Z-A</option>
+      </select>
+    </div>
+   <div class="grid-controls">
+  <!-- 1-column grid -->
+  <button class="grid-btn active" onclick="setGrid(1)">
+    <div class="grid-icon grid-1">
+      <i></i>
+    </div>
+  </button>
+
+  <!-- 2-column grid -->
+  <button class="grid-btn" onclick="setGrid(2)">
+    <div class="grid-icon grid-2">
+      <i></i>
+      <i></i>
+    </div>
+  </button>
+
+  <!-- 4-column grid -->
+  <button class="grid-btn" onclick="setGrid(4)">
+    <div class="grid-icon grid-4">
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+    </div>
+  </button>
+</div>
+  </section>
+
+  <!-- PRODUCT GRID -->
+  <div id="productGrid" class="product-grid grid-4">
+
+    <!-- Product Cards 1-16 -->
+    <a href="us1.html" class="product-card" data-category="Print" data-price="5000" data-name="Khaddar Printed 2pc">
+      <div class="product-image-wrapper"><img src="u1.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.5000</span></div>
+    </a>
+
+    <a href="us2.html" class="product-card" data-category="Printed" data-price="4500" data-name="Khaddar Floral Shirt">
+      <div class="product-image-wrapper"><img src="u2.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.4500</span></div>
+    </a>
+
+    <a href="us3.html" class="product-card" data-category="Printed" data-price="6000" data-name="Khaddar Embroidered Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u3.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.6000</span></div>
+    </a>
+
+    <a href="us4.html" class="product-card" data-category="Printed" data-price="2500" data-name="Khaddar Embroidered 2pc">
+      <div class="product-image-wrapper"><img src="u4.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">v</p><span class="price">Rs.2500</span></div>
+    </a>
+
+    <a href="us5.html" class="product-card" data-category="Printed" data-price="2000" data-name="Viscose Pastel Shirt">
+      <div class="product-image-wrapper"><img src="u5.jpg" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.2000</span></div>
+    </a>
+
+    <a href="us6.html" class="product-card" data-category="Embroidered" data-price="3000" data-name="Viscose Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u6.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.3000</span></div>
+    </a>
+
+    <a href="us7.html" class="product-card" data-category="Embroidered" data-price="3500" data-name="Cotton Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u7.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.3500</span></div>
+    </a>
+
+    <a href="us8.html" class="product-card" data-category="embroidered" data-price="4000" data-name="Light Khaddar Printed Shirt">
+      <div class="product-image-wrapper"><img src="u8.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.4000</span></div>
+    </a>
+
+    <a href="us9.html" class="product-card" data-category="Embroidered" data-price="5500" data-name="Embroidered Linen Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u9.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.5500</span></div>
+    </a>
+
+    <a href="us10.html" class="product-card" data-category="Embroidered" data-price="4800" data-name="Khaddar Embroidered 2pc">
+      <div class="product-image-wrapper"><img src="u10.jpg" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.4800</span></div>
+    </a>
+
+    <a href="us11.html" class="product-card" data-category="Embroidered" data-price="5200" data-name="Floral Print Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u11.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.5200</span></div>
+    </a>
+
+    <a href="us12.html" class="product-card" data-category="Printed" data-price="4700" data-name="Linen Printed Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u12.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.4700</span></div>
+    </a>
+
+    <a href="us13.html" class="product-card" data-category="Embroidered" data-price="4300" data-name="Linen Print Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u13.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.4300</span></div>
+    </a>
+
+    <a href="us14.html" class="product-card" data-category="Embroidered" data-price="3900" data-name="Pastel Shades Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u14.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.3900</span></div>
+    </a>
+
+    <a href="us15.html" class="product-card" data-category="Embroidered" data-price="5000" data-name="Luxury Embroidered Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u15.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.5000</span></div>
+    </a>
+
+    <a href="us16.html" class="product-card" data-category="Printed" data-price="5600" data-name="Maroon Shirt 2pc">
+      <div class="product-image-wrapper"><img src="u16.webp" alt=""><span class="add-to-cart">&#128722;</span><button class="shop-now">Shop Now</button></div>
+      <div class="product-info"><h3></h3><p class="collection">WINTER'26</p><span class="price">Rs.5600</span></div>
+    </a>
+
+  </div>
+
+  <!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- About / Logo -->
+    <div class="footer-section footer-about">
+      <h2 class="footer-logo">Trendora</h2>
+      <p>Elevate your style with our Ready-to-Wear, Unstitched, and Luxury collections.</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section footer-links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="rtw.html">Ready to Wear</a></li>
+        <li><a href="unstitched.html">Unstitched</a></li>
+        <li><a href="wed.html">Luxury</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="footer-section footer-newsletter">
+      <h3>Subscribe to Newsletter</h3>
+      <p>Get latest trends, offers & news straight to your inbox.</p>
+      <form id="newsletterForm">
+        <input type="email" placeholder="Your Email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Trendora. All Rights Reserved.</p>
+  </div>
+</footer>
+
+  <!-- Populate product h3 from data-name -->
+  <script>
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+      const name = card.dataset.name;
+      card.querySelector('h3').textContent = name;
+    });
+  
+
+  <!-- Filter, Sort, Grid JS -->
+  
+    const filterSelect = document.getElementById('filter');
+    const sortSelect = document.getElementById('sort');
+    const productGrid = document.getElementById('productGrid');
+    const products = Array.from(document.querySelectorAll('.product-card'));
+
+    filterSelect.addEventListener('change', () => {
+      const category = filterSelect.value;
+      products.forEach(p => p.classList.toggle('hide', category !== 'all' && p.dataset.category !== category));
+    });
+
+    sortSelect.addEventListener('change', () => {
+      const value = sortSelect.value;
+      const visible = products.filter(p => !p.classList.contains('hide'));
+      visible.sort((a,b) => {
+        if(value==='price-asc') return a.dataset.price - b.dataset.price;
+        if(value==='price-desc') return b.dataset.price - a.dataset.price;
+        if(value==='name-asc') return a.dataset.name.localeCompare(b.dataset.name);
+        if(value==='name-desc') return b.dataset.name.localeCompare(a.dataset.name);
+        return 0;
+      });
+      visible.forEach(p => productGrid.appendChild(p));
+    });
+
+  function setGrid(cols,event){
+  const productGrid = document.getElementById('productGrid');
+  productGrid.classList.remove('grid-1','grid-2','grid-4');
+  productGrid.classList.add('grid-'+cols);
+
+  document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let lastRemovedItem = null;
+let lastRemovedIndex = null;
+
+const cartIcon = document.getElementById("cartIcon");
+const cartSidebar = document.getElementById("cartSidebar");
+const closeCartBtn = document.getElementById("closeCartBtn");
+const continueBtn = document.getElementById("continueShoppingBtn");
+const cartItemsEl = document.getElementById("cartItems");
+const cartSubtotalEl = document.getElementById("cartSubtotal");
+const progressFill = document.getElementById("progressFill");
+const undoToast = document.getElementById("undoToast");
+const cartCountEl = document.getElementById("cartCount");
+
+/* OPEN / CLOSE CART */
+cartIcon.onclick = () => cartSidebar.classList.add("active");
+closeCartBtn.onclick = () => cartSidebar.classList.remove("active");
+continueBtn.onclick = () => cartSidebar.classList.remove("active");
+
+/* UPDATE CART COUNT BADGE */
+function updateCartCount() {
+  const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  cartCountEl.innerText = totalQty;
+  cartCountEl.style.display = totalQty === 0 ? "none" : "inline-block";
+}
+
+/* RENDER CART */
+function renderCart() {
+  cartItemsEl.innerHTML = "";
+  let subtotal = 0;
+
+  cart.forEach((item, index) => {
+    subtotal += item.price * item.qty;
+
+    cartItemsEl.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" alt="">
+        <div class="cart-item-details">
+          <h4>${item.name}</h4>
+          <p>Rs.${item.price} × ${item.qty}</p>
+          <button onclick="removeItem(${index})">Remove</button>
+        </div>
+      </div>
+    `;
+  });
+
+  cartSubtotalEl.innerText = "Rs." + subtotal;
+  progressFill.style.width = Math.min((subtotal / 8000) * 100, 100) + "%";
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+}
+
+/* ADD TO CART */
+function addToCart(item) {
+  const existing = cart.find(i => i.name === item.name);
+  if (existing) {
+    existing.qty += item.qty;
+  } else {
+    cart.push(item);
+  }
+  renderCart();
+}
+// Attach click events to all "add-to-cart" buttons
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+addToCartButtons.forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault(); // prevent following the <a> link
+    const productCard = btn.closest('.product-card');
+    const item = {
+      name: productCard.dataset.name,
+      price: parseInt(productCard.dataset.price),
+      image: productCard.querySelector('img').src,
+      qty: 1
+    };
+    addToCart(item);       // add to cart
+    cartSidebar.classList.add("active"); // optional: open cart sidebar
+  });
+});
+
+
+
+
+
+function changeCartQty(idx,delta){ cart[idx].qty=Math.max(1,cart[idx].qty+delta); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); }
+function removeItem(idx){ lastRemovedItem=cart[idx]; lastRemovedIndex=idx; cart.splice(idx,1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); document.getElementById("undoToast").style.display="flex"; setTimeout(()=>document.getElementById("undoToast").style.display="none",4000);}
+function undoRemove(){ if(lastRemovedItem){ cart.splice(lastRemovedIndex,0,lastRemovedItem); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); updateCartCount(); } document.getElementById("undoToast").style.display="none"; }
+
+/* CHECKOUT */
+document.getElementById("closeCartBtn").onclick=()=>cartSidebar.classList.remove("active");
+document.getElementById("continueShoppingBtn").onclick=()=>cartSidebar.classList.remove("active");
+document.getElementById("checkoutBtn").onclick=()=>window.location.href='checkout.html';
+/* INITIAL LOAD */
+renderCart();
+updateCartCount();
+const allProducts = [
+  { name: "Khaddar Printed 2pc", category: "rtw", price: 5000, link: "rtw1.html", image: "pret1.webp" },
+  { name: "Khaddar Floral Shirt", category: "rtw", price: 4500, link: "rtw2.html", image: "pret2.webp" },
+  { name: "Khaddar Embroidered Shirt 2pc", category: "rtw", price: 6000, link: "rtw3.html", image: "pret3.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "rtw", price: 2500, link: "rtw4.html", image: "pret4.webp" },
+  { name: "Viscose Pastel Shirt", category: "women", price: 2000, link: "rtw5.html", image: "pret5.webp" },
+  { name: "Viscose Shirt 2pc", category: "women", price: 3000, link: "rtw6.html", image: "pret6.webp" },
+  { name: "Cotton Shirt 2pc", category: "women", price: 3500, link: "rtw7.html", image: "pret7.webp" },
+  { name: "Light Khaddar Printed Shirt", category: "women", price: 4000, link: "rtw8.html", image: "pret8.webp" },
+  { name: "Embroidered Linen Shirt 2pc", category: "women", price: 5500, link: "rtw9.html", image: "pret9.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "women", price: 4800, link: "rtw10.html", image: "pret10.webp" },
+  { name: "Floral Print Shirt 2pc", category: "women", price: 5200, link: "rtw11.html", image: "pret11.webp" },
+  { name: "Linen Printed Shirt 2pc", category: "women", price: 4700, link: "rtw12.html", image: "pret12.webp" },
+  { name: "Linen Print Shirt 2pc", category: "women", price: 4300, link: "rtw13.html", image: "pret13.webp" },
+  { name: "Pastel Shades Shirt 2pc", category: "women", price: 3900, link: "rtw14.html", image: "pret14.webp" },
+  { name: "Luxury Embroidered Shirt 2pc", category: "women", price: 5000, link: "rtw15.html", image: "pret15.webp" },
+  { name: "Maroon Shirt 2pc", category: "women", price: 5600, link: "rtw16.html", image: "pret16.webp" },
+  // UNSTITCHED Collection
+  { name: "Khaddar Printed 2pc", category: "Printed", price: 5000, link: "us1.html", image: "u1.webp" },
+  { name: "Khaddar Floral Shirt", category: "Printed", price: 4500, link: "us2.html", image: "u2.webp" },
+  { name: "Khaddar Embroidered Shirt 2pc", category: "Printed", price: 6000, link: "us3.html", image: "u3.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "Printed", price: 2500, link: "us4.html", image: "u4.webp" },
+  { name: "Viscose Pastel Shirt", category: "Printed", price: 2000, link: "us5.jpg", image: "u5.jpg" },
+  { name: "Viscose Shirt 2pc", category: "Embroidered", price: 3000, link: "us6.webp", image: "u6.webp" },
+  { name: "Cotton Shirt 2pc", category: "Embroidered", price: 3500, link: "us7.webp", image: "u7.webp" },
+  { name: "Light Khaddar Printed Shirt", category: "Embroidered", price: 4000, link: "us8.webp", image: "u8.webp" },
+  { name: "Embroidered Linen Shirt 2pc", category: "Embroidered", price: 5500, link: "us9.webp", image: "u9.webp" },
+  { name: "Khaddar Embroidered 2pc", category: "Embroidered", price: 4800, link: "us10.jpg", image: "u10.jpg" },
+  { name: "Floral Print Shirt 2pc", category: "Embroidered", price: 5200, link: "us11.webp", image: "u11.webp" },
+  { name: "Linen Printed Shirt 2pc", category: "Printed", price: 4700, link: "us12.webp", image: "u12.webp" },
+  { name: "Linen Print Shirt 2pc", category: "Embroidered", price: 4300, link: "us13.webp", image: "u13.webp" },
+  { name: "Pastel Shades Shirt 2pc", category: "Embroidered", price: 3900, link: "us14.webp", image: "u14.webp" },
+  { name: "Luxury Embroidered Shirt 2pc", category: "Embroidered", price: 5000, link: "us15.webp", image: "u15.webp" },
+  { name: "Maroon Shirt 2pc", category: "Printed", price: 5600, link: "us16.webp", image: "u16.webp" },
+
+  // Wedding Edit Collection
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 50000, link: "w1.html", image: "w1.webp" },
+  { name: "Luxury jacquarad 3pc", category: "Luxury", price: 45000, link: "w2.html", image: "w2.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 60000, link: "w3.html", image: "w3.webp" },
+  { name: "Luxury Embroidered 2pc", category: "Luxury", price: 25000, link: "w4.html", image: "w4.webp" },
+  { name: "Viscose Luxury Emroidered 3pc", category: "casual", price: 20000, link: "w5.html", image: "w5.webp" },
+  { name: "Viscose Luxury 3pc", category: "casual", price: 30000, link: "w6.html", image: "w6.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 35000, link: "w7.html", image: "w7.webp" },
+  { name: "Luxury Emroidered 3pc", category: "Luxury", price: 40000, link: "w8.html", image: "w8.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 55000, link: "w9.html", image: "w9.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 48000, link: "w10.html", image: "w10.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 52000, link: "w11.html", image: "w11.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 47000, link: "w12.html", image: "w12.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 43000, link: "w13.html", image: "w13.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 39000, link: "w14.html", image: "w14.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 50000, link: "w15.html", image: "w15.webp" },
+  { name: "Luxury Emroidered 3pc", category: "casual", price: 56000, link: "w16.jpg", image: "w16.jpg" }
+];
+
+  // ...add all other products here
+
+
+const searchIcon = document.getElementById("searchIcon");
+const searchSidebar = document.getElementById("searchSidebar");
+const searchOverlay = document.getElementById("searchOverlay");
+const closeSearch = document.getElementById("closeSearch");
+const searchInput = document.getElementById("searchInput");
+const searchContent = document.getElementById("searchContent");
+
+/* OPEN SEARCH */
+searchIcon.addEventListener("click", () => {
+  searchSidebar.classList.add("active");
+  searchOverlay.classList.add("active");
+  searchInput.focus();
+});
+
+/* CLOSE SEARCH */
+function closeSearchSidebar() {
+  searchSidebar.classList.remove("active");
+  searchOverlay.classList.remove("active");
+  searchInput.value = "";
+  resetSuggestions();
+}
+
+closeSearch.addEventListener("click", closeSearchSidebar);
+searchOverlay.addEventListener("click", closeSearchSidebar);
+
+/* RESET SUGGESTIONS */
+function resetSuggestions() {
+  searchContent.innerHTML = `
+    <h4>Suggestions For You:</h4>
+    <ul class="search-suggestions">
+      <li data-query="50%">Flat 50% OFF</li>
+      <li data-query="khaddar">Ready to Wear</li>
+      <li data-query="2000">Under Rs. 2,000</li>
+      <li data-query="5000">Under Rs. 5,000</li>
+      <li data-query="winter">Winter '25</li>
+    </ul>
+  `;
+  bindSuggestionClicks();
+}
+
+/* LIVE SEARCH */
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.toLowerCase().trim();
+
+  if (!q) {
+    resetSuggestions();
+    return;
+  }
+
+  const results = allProducts.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    String(p.price).includes(q)
+  );
+
+  if (!results.length) {
+    searchContent.innerHTML = "<p>No results found</p>";
+    return;
+  }
+
+  searchContent.innerHTML = results.map(p => `
+    <a href="${p.link}" class="search-result">
+      <img src="${p.image}" alt="">
+      <div>
+        <p>${p.name}</p>
+        <span>Rs.${p.price}</span>
+      </div>
+    </a>
+  `).join("");
+});
+
+/* CLICKABLE SUGGESTIONS */
+function bindSuggestionClicks() {
+  document.querySelectorAll(".search-suggestions li").forEach(item => {
+    item.onclick = () => {
+      searchInput.value = item.dataset.query;
+      searchInput.dispatchEvent(new Event("input"));
+    };
+  });
+}
+
+bindSuggestionClicks();
+
+const menuIcon = document.querySelector(".menu-icon");
+const menuSidebar = document.getElementById("menuSidebar");
+const menuOverlay = document.getElementById("menuOverlay");
+const closeMenu = document.getElementById("closeMenu");
+
+/* OPEN MENU */
+menuIcon.addEventListener("click", () => {
+  menuSidebar.classList.add("active");
+  menuOverlay.classList.add("active");
+});
+
+/* CLOSE MENU */
+function closeMenuSidebar(){
+  menuSidebar.classList.remove("active");
+  menuOverlay.classList.remove("active");
+}
+
+closeMenu.addEventListener("click", closeMenuSidebar);
+menuOverlay.addEventListener("click", closeMenuSidebar);
+
+
+
+</script>
+
+
+
+</body>
+</html>
